@@ -14,8 +14,8 @@ var search = process.argv[2];
 
 var userInput = process.argv.slice(3).join(" ");
 
-function concertThis() {
-  var artist = userInput
+function concertThis(concert) {
+  var artist = concert
   var URL = "https://rest.bandsintown.com/artists/" + artist + "/events?app_id=codingbootcamp";
   axios.get(URL).then(
     function (response) {
@@ -27,14 +27,14 @@ function concertThis() {
         "Date: " + jsonData.datetime,
       ].join("\n\n");
       console.log(showData)
-      fs.appendFile("log.txt", showData, function(err) {
+      fs.appendFile("log.txt", showData, function (err) {
         if (err) throw err;
         console.log(showData);
       })
     })
 }
-function spotifyThis() {
-  var songname = userInput
+function spotifyThis(song) {
+  var songname = song
   spotify.search({ type: 'track', query: songname }, function (err, response) {
     if (err) {
       return console.log('Error occurred: ' + err);
@@ -46,16 +46,18 @@ function spotifyThis() {
       "Album: " + response.tracks.items[0].album.name,
     ].join("\n\n");
     console.log(showData)
-    fs.appendFile("log.txt", showData, function(err) {
+    fs.appendFile("log.txt", showData, function (err) {
       if (err) throw err;
       console.log(showData);
     })
   })
 }
-function movieThis(){
-  var moviename = userInput
+
+
+function movieThis(movie) {
+  var moviename = movie
   var URL = "http://www.omdbapi.com/?t=" + moviename + "&y=&plot=short&apikey=trilogy";
-  axios.get(URL).then(function(response){
+  axios.get(URL).then(function (response) {
     var jsonData = response.data
     var showData = [
       "Title: " + jsonData.Title,
@@ -68,27 +70,59 @@ function movieThis(){
       "Actors: " + jsonData.Actors,
     ].join("\n\n");
     console.log(showData)
-    fs.appendFile("log.txt", showData, function(err) {
+    fs.appendFile("log.txt", showData, function (err) {
       if (err) throw err;
       console.log(showData);
     })
   })
 }
+function dowhatitsays() {
+  fs.readFile("random.txt", "utf8", (err, data) => {
+    if (err) throw err;
+    var dataArray = data.split(",")
+    console.log(dataArray)
+    search = dataArray[0]
+    userInput = dataArray[1]
+    if (search === "spotify-this-song") {
+      spotifyThis(userInput);
+    } else if (search === "concert-this") {
+      concertThis(userInput);
+    } else if (search === "movie-this") {
+      movieThis(userInput);
+    }
+  });
+}
 
 if (search === "spotify-this-song") {
-  spotifyThis();
+  spotifyThis(userInput);
 }
 if (search === "concert-this") {
-  concertThis();
+  concertThis(userInput);
 }
 
-if (search === "movie-this"){
-  movieThis();
+if (search === "movie-this") {
+  movieThis(userInput);
 }
-if ((search === "movie-this") && (!userInput)){
+if ((search === "movie-this") && (!userInput)) {
   userInput = "Mr. Nobody"
   movieThis();
 }
+
+if (search === "do-what-it-says") {
+  dowhatitsays();
+}
+
+
+if (search === "spotify-this-song") {
+  spotifyThis();
+} else if (search === "concert-this") {
+  concertThis();
+} else if (search === "movie-this") {
+  movieThis();
+}
+
+
+
 
 
 
