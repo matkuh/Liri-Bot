@@ -19,22 +19,20 @@ function concertThis(concert) {
   var URL = "https://rest.bandsintown.com/artists/" + artist + "/events?app_id=codingbootcamp";
   axios.get(URL).then(
     function (response) {
-      console.log(response.data)
       var jsonData = response.data[0];
       var showData = [
-        "Name: " + jsonData.venue.name,
-        "Venue Location: " + jsonData.venue.city,
-        "Date: " + jsonData.datetime,
+        "Name: ", jsonData.venue.name,
+        "Venue Location: ", jsonData.venue.city,
+        "Date: ", jsonData.datetime,
       ].join("\n\n");
       console.log(showData)
       fs.appendFile("log.txt", showData, function (err) {
         if (err) throw err;
-        console.log(showData);
       })
     })
 }
-function spotifyThis(song) {
-  var songname = song
+function spotifyThis() {
+  var songname = userInput
   spotify.search({ type: 'track', query: songname }, function (err, response) {
     if (err) {
       return console.log('Error occurred: ' + err);
@@ -94,7 +92,7 @@ function dowhatitsays() {
 }
 
 if (search === "spotify-this-song") {
-  spotifyThis(userInput);
+  spotifyThis();
 }
 if (search === "concert-this") {
   concertThis(userInput);
@@ -111,7 +109,6 @@ if ((search === "movie-this") && (!userInput)) {
 if (search === "do-what-it-says") {
   dowhatitsays();
 }
-
 
 if (search === "spotify-this-song") {
   spotifyThis();
