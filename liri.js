@@ -27,6 +27,10 @@ function concertThis() {
         "Date: " + jsonData.datetime,
       ].join("\n\n");
       console.log(showData)
+      fs.appendFile("log.txt", showData, function(err) {
+        if (err) throw err;
+        console.log(showData);
+      })
     })
 }
 function spotifyThis() {
@@ -42,6 +46,10 @@ function spotifyThis() {
       "Album: " + response.tracks.items[0].album.name,
     ].join("\n\n");
     console.log(showData)
+    fs.appendFile("log.txt", showData, function(err) {
+      if (err) throw err;
+      console.log(showData);
+    })
   })
 }
 function movieThis(){
@@ -60,10 +68,12 @@ function movieThis(){
       "Actors: " + jsonData.Actors,
     ].join("\n\n");
     console.log(showData)
+    fs.appendFile("log.txt", showData, function(err) {
+      if (err) throw err;
+      console.log(showData);
+    })
   })
 }
-
-
 
 if (search === "spotify-this-song") {
   spotifyThis();
@@ -71,8 +81,14 @@ if (search === "spotify-this-song") {
 if (search === "concert-this") {
   concertThis();
 }
+
 if (search === "movie-this"){
   movieThis();
 }
+if ((search === "movie-this") && (!userInput)){
+  userInput = "Mr. Nobody"
+  movieThis();
+}
+
 
 
